@@ -1,15 +1,27 @@
-/* Add to frontend/src/components/styles/editpage.css */
-
-/* Project View Mode Styles */
-.project-view-mode {
-  background-color: #f8f9fa;
+/* ✅ View-Only Banner */
+.view-only-banner {
+  background: linear-gradient(135deg, #52c41a, #389e0d);
+  color: white;
+  padding: 12px 24px;
+  text-align: center;
+  font-weight: 600;
+  font-size: 16px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  z-index: 1000;
 }
 
-.project-view-header {
+.view-only-banner span {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ✅ Project Actions Bar */
+.project-actions-bar {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 20px 24px;
+  padding: 16px 24px;
   background-color: white;
   border-bottom: 1px solid #e9ecef;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
@@ -70,110 +82,312 @@
   border-color: #9a7a65;
 }
 
-.view-controls {
-  position: absolute;
-  top: 80px;
-  right: 20px;
+/* ✅ View-Only Toolbar */
+.view-only-toolbar {
+  background-color: #f8f9fa;
+  border-bottom: 2px solid #e9ecef;
+}
+
+.view-mode-indicator {
   display: flex;
   align-items: center;
-  gap: 8px;
-  background-color: white;
-  border-radius: 6px;
-  padding: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  z-index: 10;
-}
-
-.zoom-button {
-  width: 32px;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: white;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 16px;
-  font-weight: bold;
-  transition: all 0.2s;
-}
-
-.zoom-button:hover {
-  border-color: #AD8B73;
-  color: #AD8B73;
-}
-
-.zoom-display {
-  padding: 0 12px;
+  gap: 6px;
+  color: #52c41a;
+  font-weight: 500;
   font-size: 14px;
-  color: #666;
-  min-width: 50px;
-  text-align: center;
+  padding: 0 12px;
 }
 
-.main-content.view-mode {
-  position: relative;
-  height: calc(100vh - 200px);
-  padding: 0;
-  background-color: white;
-  border-radius: 8px;
-  margin: 20px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
+.edit-project-btn {
+  background-color: #1677ff !important;
+  color: white !important;
+  border-radius: 6px;
 }
 
-.project-view-info {
-  position: absolute;
-  bottom: 20px;
-  left: 20px;
-  background-color: white;
-  border-radius: 8px;
-  padding: 16px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  z-index: 10;
-  min-width: 200px;
+.edit-project-btn:hover {
+  background-color: #0958d9 !important;
 }
 
-.project-stats {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+/* ============================================
+   READ-ONLY PROPERTY PANEL
+   ============================================ */
+
+/* ✅ Enhanced Read-Only Property Panel */
+.readonly-panel {
+  background-color: #fafafa;
+  border: 2px solid #e8e8e8;
+  opacity: 0.95;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.readonly-panel h3 {
+  color: #52c41a;
+  border-bottom-color: #52c41a;
+  font-size: 16px;
   margin-bottom: 16px;
 }
 
-.stat {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.stat-label {
-  font-size: 14px;
-  color: #666;
-}
-
-.stat-value {
-  font-size: 16px;
+.readonly-panel .element-type-label.readonly {
+  background-color: #f6ffed;
+  border: 1px solid #b7eb8f;
+  color: #389e0d;
   font-weight: 600;
-  color: #333;
 }
 
-.login-prompt {
-  text-align: center;
-  padding-top: 16px;
-  border-top: 1px solid #eee;
+/* ✅ Read-Only Input Styles */
+.readonly-input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #e9ecef;
+  border-radius: 4px;
+  background-color: #f8f9fa !important;
+  color: #495057 !important;
+  font-size: 14px;
+  cursor: default;
+  box-sizing: border-box;
 }
 
-.login-prompt a {
-  color: #AD8B73;
-  text-decoration: none;
+.readonly-input:focus {
+  outline: none;
+  border-color: #e9ecef;
+  box-shadow: none;
+}
+
+.readonly-input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+.readonly-input[type="number"]::-webkit-outer-spin-button,
+.readonly-input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.readonly-input.element-id-input {
+  font-family: 'Courier New', monospace;
+  background-color: #f0f0f0 !important;
+  color: #666 !important;
+  font-size: 12px;
+}
+
+/* ✅ Color Field for Read-Only */
+.color-field-readonly {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.readonly-color-input {
+  width: 40px;
+  height: 32px;
+  border: 1px solid #e9ecef;
+  border-radius: 4px;
+  cursor: default;
+  padding: 2px;
+}
+
+.readonly-color-input:disabled {
+  opacity: 0.8;
+  cursor: not-allowed;
+}
+
+.color-text {
+  flex: 1;
+  font-family: 'Courier New', monospace;
+}
+
+/* ✅ Image Container for Read-Only */
+.image-readonly-container {
+  width: 100%;
+  min-height: 120px;
+  border: 2px solid #e9ecef;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background-color: #f8f9fa;
+}
+
+.readonly-profile-image {
+  max-width: 100%;
+  max-height: 100px;
+  border-radius: 4px;
+  object-fit: cover;
+}
+
+.image-placeholder.readonly {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #6c757d;
+  font-style: italic;
+  min-height: 80px;
+}
+
+/* ✅ Project Info Section */
+.readonly-disclaimer {
+  margin-top: 16px;
+  padding: 12px;
+  background-color: #f0f9ff;
+  border-radius: 6px;
+  border-left: 4px solid #52c41a;
+}
+
+.readonly-disclaimer p {
+  margin: 0;
+  font-size: 12px;
+  color: #666;
   font-weight: 500;
 }
 
-.login-prompt a:hover {
-  text-decoration: underline;
+.readonly-disclaimer p:first-child {
+  margin-bottom: 4px;
 }
+
+/* ============================================
+   HOVER EFFECTS & INTERACTIONS
+   ============================================ */
+
+/* ✅ Hover Effects for Interactive Elements */
+.project-view-mode .element {
+  cursor: pointer !important;
+  transition: all 0.2s ease;
+}
+
+.project-view-mode .element:hover {
+  opacity: 0.9;
+  transform: scale(1.02);
+}
+
+.project-view-mode .element.selected {
+  box-shadow: 0 0 0 3px rgba(82, 196, 26, 0.3) !important;
+  border-color: #52c41a !important;
+}
+
+.project-view-mode .relationship-line {
+  cursor: pointer !important;
+  transition: all 0.2s ease;
+}
+
+.project-view-mode .relationship-line:hover {
+  filter: drop-shadow(0 0 4px rgba(82, 196, 26, 0.4));
+  stroke-width: 3;
+}
+
+.project-view-mode .relationship-line.selected {
+  stroke: #52c41a !important;
+  stroke-width: 4 !important;
+  filter: drop-shadow(0 0 6px rgba(82, 196, 26, 0.6));
+}
+
+/* ============================================
+   ANIMATIONS
+   ============================================ */
+
+/* ✅ Animation for Panel Appearance */
+.readonly-panel {
+  animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+
+/* ✅ Mobile Responsive Design */
+@media (max-width: 768px) {
+  .view-only-banner {
+    padding: 8px 16px;
+    font-size: 14px;
+  }
+
+  .project-actions-bar {
+    flex-direction: column;
+    gap: 12px;
+    padding: 12px 16px;
+  }
+  
+  .project-actions-bar .action-button {
+    width: 100%;
+  }
+
+  .readonly-panel {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    top: auto;
+    width: 100%;
+    max-height: 70vh;
+    overflow-y: auto;
+    border-radius: 12px 12px 0 0;
+    z-index: 100;
+    opacity: 1;
+  }
+
+  .view-mode-indicator {
+    font-size: 12px;
+    padding: 0 8px;
+  }
+
+  .view-mode-indicator span {
+    display: none;
+  }
+
+  .color-field-readonly {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 4px;
+  }
+
+  .readonly-color-input {
+    width: 100%;
+    height: 40px;
+  }
+
+  .image-readonly-container {
+    min-height: 100px;
+  }
+
+  .readonly-profile-image {
+    max-height: 80px;
+  }
+}
+
+@media (max-width: 480px) {
+  .readonly-panel {
+    max-height: 60vh;
+  }
+
+  .project-info h1 {
+    font-size: 24px;
+  }
+
+  .project-author {
+    font-size: 14px;
+  }
+
+  .project-description {
+    font-size: 13px;
+  }
+}
+
+/* ============================================
+   LOADING & ERROR STATES
+   ============================================ */
 
 .loading-container, .error-container {
   display: flex;
@@ -217,405 +431,4 @@
 
 .back-button:hover {
   background-color: #9a7a65;
-}
-
-/* Status bar enhancements */
-.status-bar {
-  background-color: white;
-  border-top: 1px solid #e9ecef;
-  padding: 8px 16px;
-  font-size: 12px;
-  color: #666;
-}
-
-.status-info {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-
-.unsaved-indicator {
-  color: #ff6b35;
-  font-weight: 500;
-}
-
-.saving-indicator {
-  color: #28a745;
-  font-weight: 500;
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  .project-view-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 16px;
-  }
-  
-  .project-actions {
-    width: 100%;
-    justify-content: flex-end;
-  }
-  
-  .view-controls {
-    position: static;
-    margin: 16px 20px 0;
-    justify-content: center;
-  }
-  
-  .main-content.view-mode {
-    margin: 10px;
-    height: calc(100vh - 300px);
-  }
-  
-  .project-view-info {
-    position: static;
-    margin: 16px 20px;
-    width: calc(100% - 40px);
-  }
-  
-  .project-stats {
-    flex-direction: row;
-    flex-wrap: wrap;
-    gap: 16px;
-  }
-  
-  .stat {
-    flex-direction: column;
-    align-items: center;
-    gap: 4px;
-    min-width: 80px;
-  }
-  /* Add to frontend/src/components/styles/projectview.css */
-
-/* Cover Image Styles */
-.project-cover-header {
-  position: relative;
-  width: 100%;
-  height: 300px;
-  overflow: hidden;
-  margin-bottom: 20px;
-}
-
-.project-cover-header img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.cover-overlay {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
-  padding: 40px 24px 24px;
-  color: white;
-}
-
-.cover-overlay .project-info h1 {
-  color: white;
-  margin-bottom: 8px;
-  font-size: 32px;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-}
-
-.cover-overlay .project-author {
-  color: rgba(255, 255, 255, 0.9);
-  font-size: 18px;
-  margin-bottom: 12px;
-}
-
-.cover-overlay .project-description {
-  color: rgba(255, 255, 255, 0.8);
-  font-size: 16px;
-  max-width: 800px;
-}
-
-.project-actions-bar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 16px 24px;
-  background-color: white;
-  border-bottom: 1px solid #e9ecef;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-}
-
-/* Mobile responsiveness for cover image */
-@media (max-width: 768px) {
-  .project-cover-header {
-    height: 200px;
-  }
-  
-  .cover-overlay {
-    padding: 30px 16px 16px;
-  }
-  
-  .cover-overlay .project-info h1 {
-    font-size: 24px;
-  }
-  
-  .cover-overlay .project-author {
-    font-size: 16px;
-  }
-  
-  .cover-overlay .project-description {
-    font-size: 14px;
-  }
-  
-  .project-actions-bar {
-    flex-direction: column;
-    gap: 12px;
-    padding: 12px 16px;
-  }
-  
-  .project-actions-bar .action-button {
-    width: 100%;
-  }
-}
-/* frontend/src/components/styles/projectview.css - เพิ่มใน CSS ที่มีอยู่ */
-
-/* ✅ View-Only Banner */
-.view-only-banner {
-  background: linear-gradient(135deg, #52c41a, #389e0d);
-  color: white;
-  padding: 12px 24px;
-  text-align: center;
-  font-weight: 600;
-  font-size: 16px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  z-index: 1000;
-}
-
-.view-only-banner span {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-}
-
-/* ✅ View-Only Toolbar */
-.view-only-toolbar {
-  background-color: #f8f9fa;
-  border-bottom: 2px solid #e9ecef;
-}
-
-.view-mode-indicator {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  color: #52c41a;
-  font-weight: 500;
-  font-size: 14px;
-  padding: 0 12px;
-}
-
-.edit-project-btn {
-  background-color: #1677ff !important;
-  color: white !important;
-  border-radius: 6px;
-}
-
-.edit-project-btn:hover {
-  background-color: #0958d9 !important;
-}
-
-/* ✅ Read-Only Property Panel */
-.readonly-panel {
-  background-color: #fafafa;
-  border: 2px solid #e8e8e8;
-  opacity: 0.95;
-}
-
-.readonly-panel h3 {
-  color: #52c41a;
-  border-bottom-color: #52c41a;
-}
-
-.readonly-panel .element-type-label.readonly {
-  background-color: #f6ffed;
-  border: 1px solid #b7eb8f;
-  color: #389e0d;
-}
-
-.readonly-field {
-  margin-bottom: 16px;
-}
-
-.readonly-field label {
-  display: block;
-  font-size: 14px;
-  font-weight: 600;
-  margin-bottom: 6px;
-  color: #555;
-}
-
-.readonly-value {
-  background-color: #f8f9fa;
-  border: 1px solid #e9ecef;
-  border-radius: 4px;
-  padding: 8px 12px;
-  font-size: 14px;
-  color: #333;
-  min-height: 20px;
-  word-wrap: break-word;
-}
-
-.readonly-value.text-content {
-  white-space: pre-wrap;
-  min-height: 60px;
-}
-
-.readonly-value.element-id {
-  font-family: 'Courier New', monospace;
-  background-color: #f0f0f0;
-  color: #666;
-  font-size: 12px;
-}
-
-.readonly-value.author-name {
-  font-weight: 600;
-  color: #1677ff;
-}
-
-/* ✅ Character Type Badges */
-.type-badge {
-  display: inline-block;
-  padding: 4px 12px;
-  border-radius: 12px;
-  font-size: 12px;
-  font-weight: 600;
-  text-transform: capitalize;
-}
-
-.type-badge.protagonist {
-  background-color: #e6f7ff;
-  color: #1890ff;
-  border: 1px solid #91d5ff;
-}
-
-.type-badge.antagonist {
-  background-color: #fff1f0;
-  color: #ff4d4f;
-  border: 1px solid #ffadd2;
-}
-
-.type-badge.supporting {
-  background-color: #f6ffed;
-  color: #52c41a;
-  border: 1px solid #b7eb8f;
-}
-
-.type-badge.neutral {
-  background-color: #f5f5f5;
-  color: #8c8c8c;
-  border: 1px solid #d9d9d9;
-}
-
-.type-badge.generic {
-  background-color: #e6f7ff;
-  color: #1677ff;
-  border: 1px solid #91d5ff;
-}
-
-.type-badge.child-of {
-  background-color: #fff2e8;
-  color: #fa541c;
-  border: 1px solid #ffbb96;
-}
-
-/* ✅ Profile Image in Read-Only */
-.readonly-image {
-  display: flex;
-  justify-content: center;
-  padding: 8px;
-}
-
-.readonly-profile-image {
-  max-width: 100px;
-  max-height: 100px;
-  border-radius: 50%;
-  border: 2px solid #e8e8e8;
-  object-fit: cover;
-}
-
-/* ✅ Project Info Section */
-.readonly-project-info {
-  margin-top: 24px;
-  padding-top: 16px;
-  border-top: 1px solid #e8e8e8;
-}
-
-.readonly-disclaimer {
-  margin-top: 16px;
-  padding: 12px;
-  background-color: #f0f0f0;
-  border-radius: 6px;
-  border-left: 4px solid #52c41a;
-}
-
-.readonly-disclaimer p {
-  margin: 0;
-  font-size: 12px;
-  color: #666;
-  font-style: italic;
-}
-
-.readonly-disclaimer p:first-child {
-  margin-bottom: 4px;
-}
-
-/* ✅ Project View Mode Adjustments */
-.project-view-mode .main-content {
-  position: relative;
-}
-
-.project-view-mode .canvas-container {
-  cursor: default !important;
-}
-
-.project-view-mode .element {
-  cursor: pointer !important;
-}
-
-.project-view-mode .element:hover {
-  opacity: 0.8;
-  transform: scale(1.02);
-  transition: all 0.2s ease;
-}
-
-.project-view-mode .element.selected {
-  box-shadow: 0 0 0 3px rgba(82, 196, 26, 0.3) !important;
-  border-color: #52c41a !important;
-}
-
-/* ✅ Responsive Design */
-@media (max-width: 768px) {
-  .view-only-banner {
-    padding: 8px 16px;
-    font-size: 14px;
-  }
-
-  .readonly-panel {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    top: auto;
-    width: 100%;
-    max-height: 60vh;
-    overflow-y: auto;
-    border-radius: 12px 12px 0 0;
-    z-index: 100;
-  }
-
-  .view-mode-indicator {
-    font-size: 12px;
-    padding: 0 8px;
-  }
-
-  .view-mode-indicator span {
-    display: none;
-  }
-}
 }
