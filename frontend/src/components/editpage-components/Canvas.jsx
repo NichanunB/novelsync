@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { ELEMENT_TYPES } from '../../constants/elementTypes';
+import { calculateRelationshipPosition } from '../../utils/helpers';
 import '../styles/editpage.css';
 
 const splitLongWordToFit = (ctx, word, maxWidth) => {
@@ -148,9 +149,6 @@ const renderElement = (ctx, element, isSelected, zoomLevel) => {
       break;
     }
 
-    // ✅ ลบ case ELEMENT_TYPES.RELATIONSHIP ออกทั้งหมด
-    // เพราะให้ RelationshipLayer.jsx จัดการแสดงผลแทน
-
     default:
       break;
   }
@@ -170,6 +168,7 @@ const Canvas = ({
   handleCanvasClick 
 }) => {
   const canvasContext = useRef(null);
+  const svgRef = useRef(null);
   
   // State for dragging
   const [isDragging, setIsDragging] = useState(false);
@@ -187,9 +186,6 @@ const Canvas = ({
     // Set canvas dimensions
     canvas.width = canvas.offsetWidth;
     canvas.height = canvas.offsetHeight;
-    
-    // ✅ ไม่ต้องทำให้ elements เป็น global แล้ว
-    // เพราะ RelationshipLayer จัดการ relationship เอง
     
     // Initial render
     renderCanvas();
@@ -226,8 +222,7 @@ const Canvas = ({
     // Draw grid (optional)
     drawGrid(ctx, canvas.width, canvas.height, zoomLevel);
     
-    // ✅ แสดงผลเฉพาะ element ที่ไม่ใช่ RELATIONSHIP
-    // เพราะ RELATIONSHIP ให้ RelationshipLayer จัดการ
+    // Render non-relationship elements
     elements
       .filter(element => element.type !== ELEMENT_TYPES.RELATIONSHIP)
       .forEach(element => {
@@ -297,9 +292,6 @@ const Canvas = ({
           y <= element.y + 5
         );
         
-      // ✅ ลบ case ELEMENT_TYPES.RELATIONSHIP ออก
-      // เพราะ RelationshipLayer จัดการการคลิกเอง
-        
       default:
         return false;
     }
@@ -316,7 +308,7 @@ const Canvas = ({
     const x = (e.clientX - rect.left) / zoomLevel;
     const y = (e.clientY - rect.top) / zoomLevel;
     
-    // ✅ หา element ที่คลิก โดยไม่รวม RELATIONSHIP
+    // Find clicked element (excluding relationships)
     const clickedElement = [...elements]
       .filter(element => element.type !== ELEMENT_TYPES.RELATIONSHIP)
       .reverse()
@@ -394,6 +386,136 @@ const Canvas = ({
   const handleMouseOut = () => {
     setIsDragging(false);
   };
+
+  // ✅ Helper function สำหรับ Relationship
+  const getElementById = (id) => elements.find(el => el.id === id);
+
+  // ✅ ฟังก์ชันคำนวณจุดที่เส้นตัดกับขอบวงกลม (แก้ไขแล้ว)
+const calculateEdgePoints = (sourceEl, targetEl) => {
+  // Debug: ตรวจสอบค่า element
+  console.log('Source Element:', { x: sourceEl.x, y: sourceEl.y, width: sourceEl.width });
+  console.log('Target Element:', { x: targetEl.x, y: targetEl.y, width: targetEl.width });
+  
+  // ใช้ x, y ของ element โดยตรง เพราะเป็นจุดศูนย์กลางอยู่แล้ว
+  const sourceCenterX = sourceEl.x;
+  const sourceCenterY = sourceEl.y;
+  const targetCenterX = targetEl.x;
+  const targetCenterY = targetEl.y;
+  
+  // ตรวจสอบว่าระยะห่างระหว่าง element ไม่เป็น 0
+  const dx = targetCenterX - sourceCenterX;
+  const dy = targetCenterY - sourceCenterY;
+  const distance = Math.sqrt(dx * dx + dy * dy);
+  
+  if (distance === 0) {
+    // หาก element อยู่ตำแหน่งเดียวกัน ให้วาดเส้นสั้นๆ
+    return {
+      x1: sourceCenterX,
+      y1: sourceCenterY,
+      x2: sourceCenterX + 50,
+      y2: sourceCenterY
+    };
+  }
+  
+  const angle = Math.atan2(dy, dx);
+  
+  // คำนวณรัศมีของแต่ละ element
+  const sourceRadius = (sourceEl.width || 100) / 2;
+  const targetRadius = (targetEl.width || 100) / 2;
+  
+  // คำนวณจุดที่ขอบของวงกลม
+  const sourceEdgeX = sourceCenterX + Math.cos(angle) * sourceRadius;
+  const sourceEdgeY = sourceCenterY + Math.sin(angle) * sourceRadius;
+  
+  const targetEdgeX = targetCenterX - Math.cos(angle) * targetRadius;
+  const targetEdgeY = targetCenterY - Math.sin(angle) * targetRadius;
+  
+  const result = {
+    x1: sourceEdgeX,
+    y1: sourceEdgeY,
+    x2: targetEdgeX,
+    y2: targetEdgeY
+  };
+  
+  console.log('Calculated Edge Points:', result);
+  return result;
+};
+
+// ✅ ทางเลือก: ใช้ฟังก์ชัน calculateRelationshipPosition ที่มีอยู่แล้ว
+const calculateEdgePointsAlternative = (sourceEl, targetEl) => {
+  // ใช้ฟังก์ชันที่ import มาจาก utils/helpers
+  return calculateRelationshipPosition(sourceEl, targetEl);
+};
+
+  // ✅ ฟังก์ชัน Render Relationships
+  const validRelationships = elements
+    .filter(element =>
+      element.type === ELEMENT_TYPES.RELATIONSHIP &&
+      !element.hidden &&
+      element.sourceId &&
+      element.targetId &&
+      getElementById(element.sourceId) &&
+      getElementById(element.targetId) &&
+      !getElementById(element.sourceId).hidden &&
+      !getElementById(element.targetId).hidden
+    )
+    .map(relationship => {
+      const sourceEl = getElementById(relationship.sourceId);
+      const targetEl = getElementById(relationship.targetId);
+      
+      const position = calculateEdgePoints(sourceEl, targetEl);
+      
+      return { relationship, position, isValid: !!position };
+    });
+
+  const renderArrowMarker = () => (
+    <defs>
+      <marker
+        id="arrowhead"
+        markerWidth="10"
+        markerHeight="7"
+        refX="9"
+        refY="3.5"
+        orient="auto">
+        <polygon points="0 0, 10 3.5, 0 7" fill="#1677ff" />
+      </marker>
+      <marker
+        id="family-arrowhead"
+        markerWidth="10"
+        markerHeight="7"
+        refX="9"
+        refY="3.5"
+        orient="auto">
+        <polygon points="0 0, 10 3.5, 0 7" fill="#fa541c" />
+      </marker>
+      {/* Dynamic markers for custom colors */}
+      {validRelationships.map(({ relationship }) => (
+        <marker
+          key={`marker-${relationship.id}`}
+          id={`arrowhead-${relationship.id}`}
+          markerWidth="10"
+          markerHeight="7"
+          refX="9"
+          refY="3.5"
+          orient="auto">
+          <polygon points="0 0, 10 3.5, 0 7" fill={relationship.color || "#1677ff"} />
+        </marker>
+      ))}
+    </defs>
+  );
+
+  const getStrokeDashArray = (lineType) => {
+    switch (lineType) {
+      case 'dashed':
+        return '8,4';
+      case 'dotted':
+        return '2,2';
+      case 'dashdot':
+        return '8,4,2,4';
+      default:
+        return 'none';
+    }
+  };
   
   return (
     <div className="canvas-container">
@@ -406,6 +528,156 @@ const Canvas = ({
         onMouseOut={handleMouseOut}
         style={{ cursor: isDragging ? 'grabbing' : 'default' }}
       />
+      
+      {/* ✅ SVG Layer สำหรับ Relationships */}
+      <svg 
+        ref={svgRef}
+        className="relationships-layer"
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          pointerEvents: 'none',
+          zIndex: 5
+        }}
+      >
+        {renderArrowMarker()}
+
+        {validRelationships
+          .filter(rel => rel.isValid)
+          .map(({ relationship, position }) => {
+            if (!position) return null;
+
+            const { x1, y1, x2, y2 } = position;
+            const midX = (x1 + x2) / 2;
+            const midY = (y1 + y2) / 2;
+            const isSelected = selectedElements.includes(relationship.id);
+            
+            const isChild = relationship.relationshipType === 'child-of';
+            const color = relationship.color || (isChild ? '#fa541c' : '#1677ff');
+            const markerId = `arrowhead-${relationship.id}`;
+            const lineType = relationship.lineType || 'solid';
+
+            // Calculate label position with better positioning
+            const angle = Math.atan2(y2 - y1, x2 - x1);
+            const labelOffsetX = Math.sin(angle) * 20;
+            const labelOffsetY = -Math.cos(angle) * 20;
+
+            return (
+              <g key={relationship.id}>
+                {/* Main relationship line */}
+                <line
+                  x1={x1 * zoomLevel}
+                  y1={y1 * zoomLevel}
+                  x2={x2 * zoomLevel}
+                  y2={y2 * zoomLevel}
+                  stroke={color}
+                  strokeWidth={isSelected ? 4 : 2}
+                  strokeDasharray={getStrokeDashArray(lineType)}
+                  markerEnd={relationship.directed ? `url(#${markerId})` : ""}
+                  className={`relationship-line ${isSelected ? 'selected' : ''}`}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleSelectElement(relationship.id);
+                  }}
+                  style={{ 
+                    cursor: 'pointer',
+                    filter: isSelected ? 'drop-shadow(0 0 3px rgba(22, 119, 255, 0.5))' : 'none',
+                    pointerEvents: 'auto'
+                  }}
+                />
+
+                {/* Invisible thicker line for easier clicking */}
+                <line
+                  x1={x1 * zoomLevel}
+                  y1={y1 * zoomLevel}
+                  x2={x2 * zoomLevel}
+                  y2={y2 * zoomLevel}
+                  stroke="transparent"
+                  strokeWidth="12"
+                  style={{ cursor: 'pointer', pointerEvents: 'auto' }}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleSelectElement(relationship.id);
+                  }}
+                />
+
+                {/* Relationship label */}
+                <g transform={`translate(${(midX + labelOffsetX) * zoomLevel}, ${(midY + labelOffsetY) * zoomLevel})`}>
+                  {/* Label background */}
+                  <rect
+                    x="-50"
+                    y="-10"
+                    width="80"
+                    height="20"
+                    fill="white"
+                    stroke={isSelected ? color : '#ddd'}
+                    strokeWidth={isSelected ? 2 : 1}
+                    rx="10"
+                    ry="10"
+                    className="relationship-label-bg"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleSelectElement(relationship.id);
+                    }}
+                    style={{ pointerEvents: 'auto', cursor: 'pointer' }}
+                  />
+                  
+                  {/* Label text */}
+                  <foreignObject
+                    x="-45"
+                    y="-8"
+                    width="70"
+                    height="16"
+                    className="relationship-label-container"
+                  >
+                    {isSelected ? (
+                      <input
+                        type="text"
+                        value={relationship.text || ''}
+                        placeholder="relationship"
+                        className="relationship-label-input"
+                        onClick={(e) => e.stopPropagation()}
+                        onChange={(e) => updateElement(relationship.id, { text: e.target.value })}
+                        autoFocus
+                        style={{
+                          width: '100%',
+                          border: 'none',
+                          background: 'transparent',
+                          textAlign: 'center',
+                          fontSize: `${12 * zoomLevel}px`,
+                          outline: 'none',
+                          color: '#333',
+                          pointerEvents: 'auto'
+                        }}
+                      />
+                    ) : (
+                      <div
+                        className="relationship-label-display"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleSelectElement(relationship.id);
+                        }}
+                        style={{
+                          textAlign: 'center',
+                          fontSize: `${12 * zoomLevel}px`,
+                          color: '#333',
+                          cursor: 'pointer',
+                          lineHeight: '16px',
+                          pointerEvents: 'auto'
+                        }}
+                      >
+                        {relationship.text || 'relationship'}
+                      </div>
+                    )}
+                  </foreignObject>
+                </g>
+              </g>
+            );
+          })}
+      </svg>
     </div>
   );
 };
