@@ -1,3 +1,4 @@
+// frontend/src/components/editpage-components/ProjectName.jsx
 import React, { useState, useEffect, useRef } from 'react';
 import { Edit2, Check } from 'lucide-react';
 import '../styles/projectname.css';
@@ -13,6 +14,11 @@ function ProjectName({ initialName = "Untitled Character Diagram", onNameChange 
   const [isEditing, setIsEditing] = useState(false);
   const inputRef = useRef(null);
   
+  // ✅ Update local state when initialName changes (e.g., after project save)
+  useEffect(() => {
+    setProjectName(initialName);
+  }, [initialName]);
+
   // Focus the input when entering edit mode
   useEffect(() => {
     if (isEditing && inputRef.current) {
@@ -27,8 +33,13 @@ function ProjectName({ initialName = "Untitled Character Diagram", onNameChange 
 
   const handleEndEditing = () => {
     setIsEditing(false);
-    if (onNameChange && projectName !== initialName) {
-      onNameChange(projectName);
+    // ✅ Only call onNameChange if the name actually changed
+    const trimmedName = projectName.trim();
+    if (onNameChange && trimmedName !== initialName && trimmedName !== '') {
+      onNameChange(trimmedName);
+    } else if (trimmedName === '') {
+      // ✅ Reset to initialName if user enters empty string
+      setProjectName(initialName);
     }
   };
 
@@ -40,6 +51,7 @@ function ProjectName({ initialName = "Untitled Character Diagram", onNameChange 
     if (e.key === 'Enter') {
       handleEndEditing();
     } else if (e.key === 'Escape') {
+      // ✅ Reset to original name on escape
       setProjectName(initialName);
       setIsEditing(false);
     }
