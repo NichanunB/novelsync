@@ -58,6 +58,27 @@
   color: #666;
 }
 
+/* Project author info in toolbar */
+.project-author-info {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #666;
+  font-weight: 500;
+  font-size: 14px;
+  padding: 0 12px;
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.project-author-info span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 /* Dropdown Menu Styles */
 .edit-dropdown,
 .style-dropdown {
@@ -140,12 +161,19 @@
   cursor: move;
   user-select: none;
   transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
-  z-index: 10;
+  z-index: 5; 
+  
 }
 
 .element.selected {
-  z-index: 20;
+  z-index: 10;
 } 
+
+.g {
+  position: absolute;
+  pointer-events: none;
+  z-index: 0; /* Changed from 5 to 0 - now at bottom layer */
+}
 
 /* Circle Element Styles */
 .circle {
@@ -159,6 +187,7 @@
   justify-content: center;
   flex-direction: column;
   padding: 8px;
+  z-index: 5;
 }
 
 .circle.selected {
@@ -241,6 +270,7 @@
   background-color: #fcfcfc;
   overflow: hidden;
   touch-action: none;
+  
 }
 
 .diagram-canvas {
@@ -290,7 +320,7 @@
   position: absolute;
   right: 20px;
   top: 80px;
-  z-index: 0;
+  z-index: 30;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
@@ -463,7 +493,7 @@
   background-color: #ffccc7;
 }
 
-/* Relationship Layer Styles */
+/* Relationship Layer Styles - MOVED TO BOTTOM LAYER */
 .relationships-layer {
   position: absolute;
   top: 0;
@@ -471,8 +501,7 @@
   width: 100%;
   height: 100%;
   pointer-events: none;
-  z-index: 5;
-
+  z-index: 1; /* Changed from 5 to 1 - now at bottom layer */
 }
 
 .relationship-line {
@@ -482,6 +511,7 @@
   stroke-linecap: round;
   stroke-linejoin: round;
   stroke-width: 2;
+  z-index: 0;
   
 }
 
@@ -540,6 +570,61 @@
   filter: drop-shadow(0 2px 4px rgba(255, 77, 79, 0.3));
 }
 
+/* View-only banner */
+.view-only-banner {
+  background: linear-gradient(135deg, #52c41a, #389e0d);
+  color: white;
+  padding: 8px 16px;
+  text-align: center;
+  font-weight: 600;
+  font-size: 14px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  z-index: 50;
+}
+
+.view-only-banner span {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.view-mode-indicator {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #52c41a;
+  font-weight: 500;
+  font-size: 14px;
+  padding: 0 12px;
+}
+
+/* Read-only panel styles */
+.readonly-panel {
+  background-color: #fafafa;
+  border: 2px solid #e8e8e8;
+  opacity: 0.95;
+}
+
+.readonly-panel h3 {
+  color: #52c41a;
+  border-bottom-color: #52c41a;
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.readonly-panel label {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 8px;
+}
+
+.readonly-panel p {
+  font-size: 14px;
+  color: #333;
+  margin: 0;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .property-panel {
@@ -570,49 +655,21 @@
     font-size: 10px;
     line-height: 14px;
   }
+
+  /* Responsive adjustments for author info */
+  .project-author-info {
+    max-width: 120px;
+    font-size: 12px;
+  }
+  
+  .project-author-info span {
+    display: none; /* Hide "by" text on mobile */
+  }
 }
 
-/* View-only banner */
-.view-only-banner {
-  background: linear-gradient(135deg, #52c41a, #389e0d);
-  color: white;
-  padding: 8px 16px;
-  text-align: center;
-  font-weight: 600;
-  font-size: 14px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  z-index: 000;
-}
-
-.view-only-banner span {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.view-mode-indicator {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  color: #52c41a;
-  font-weight: 500;
-  font-size: 14px;
-  padding: 0 12px;
- 
-}
-.readonly-panel label {
-  font-size: 14px;
-  color: #666;
-  margin-bottom: 8px;
-}
-.readonly-panel p {
-  font-size: 14px;
-  color: #333;
-  margin: 0;
-}
-.readonly-panel h3 {
-  font-size: 16px;
-  font-weight: 600;
-  color: #333;
-  margin-bottom: 8px;
+@media (max-width: 480px) {
+  .project-author-info {
+    max-width: 80px;
+    font-size: 11px;
+  }
 }
