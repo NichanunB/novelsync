@@ -219,10 +219,7 @@ function ProjectView() {
       <div className="top-bar">
         <div className="project-name-container">
           <h2 className="project-name-text">{project?.title || 'Untitled Character Diagram'}</h2>
-          <div className="project-stats">
-            <span>{elements.length} characters</span>
-            <span>{relationships.length} relationships</span>
-          </div>
+          
         </div>
         
         {/* View-Only Toolbar */}
@@ -266,25 +263,6 @@ function ProjectView() {
           />
         )}
       </div>
-      
-      {/* Debug info (remove in production) */}
-      {process.env.NODE_ENV === 'development' && (
-        <div style={{ 
-          position: 'fixed', 
-          bottom: '10px', 
-          left: '10px', 
-          background: 'rgba(0,0,0,0.8)', 
-          color: 'white', 
-          padding: '10px', 
-          borderRadius: '5px',
-          fontSize: '12px',
-          zIndex: 1000
-        }}>
-          <div>Elements: {elements.length}</div>
-          <div>Relationships: {relationships.length}</div>
-          <div>Selected: {selectedElement?.name || 'None'}</div>
-        </div>
-      )}
     </div>
   );
 }
