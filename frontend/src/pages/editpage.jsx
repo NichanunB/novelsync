@@ -14,9 +14,8 @@ import ProjectName from '../components/editpage-components/ProjectName';
 import Toolbar from '../components/editpage-components/Toolbar';
 import EditDropdown from '../components/editpage-components/EditDropdown';
 import StyleDropdown from '../components/editpage-components/RelationDropdown';
-import Canvas from '../components/editpage-components/Canvas';
+import Canvas from '../components/editpage-components/Canvas'; // ✅ Canvas ที่รวม RelationshipLayer แล้ว
 import PropertyPanel from '../components/editpage-components/PropertyPanel';
-import RelationshipLayer from '../components/editpage-components/RelationshipLayer';
 import ProjectSettingsModal from '../components/editpage-components/ProjectSettingsModal';
 
 function EditPage() {
@@ -259,20 +258,16 @@ function EditPage() {
     setUnsavedChanges(true);
   };
 
-  // ✅ เพิ่มฟังก์ชันสำหรับบันทึกการตั้งค่าโปรเจกต์ (รวมรูปหน้าปก)
+  // Settings save function
   const handleSettingsSave = async (updates) => {
     setIsSaving(true);
     try {
       if (currentProject) {
-        // Update the project with new settings
         await projectAPI.updateProject(currentProject.id, updates);
-        
-        // Update local state
         setCurrentProject({ ...currentProject, ...updates });
         if (updates.title) {
           setProjectName(updates.title);
         }
-        
         setUnsavedChanges(false);
         alert('Project settings saved successfully!');
       }
@@ -330,14 +325,6 @@ function EditPage() {
         addElement={handleAddElement} 
       />
 
-      <RelationshipLayer
-        elements={elements}
-        selectedElements={selectedElements}
-        handleSelectElement={enhancedHandleSelectElement}
-        updateElement={updateElement}
-        removeElement={removeElement}
-      />
-
       <StyleDropdown 
         isOpen={isStyleDropdownOpen}
         selectedElement={selectedElement} 
@@ -346,6 +333,7 @@ function EditPage() {
       />
       
       <div className="main-content">
+        {/* ✅ Canvas ที่รวม RelationshipLayer แล้ว - ไม่ต้องมี RelationshipLayer แยก */}
         <Canvas 
           canvasRef={canvasRef}
           elements={elements} 
@@ -370,7 +358,7 @@ function EditPage() {
         )}
       </div>
 
-      {/* ✅ Project Settings Modal - ตรงนี้คือส่วนที่จะให้อัปโหลดรูปหน้าปกได้ */}
+      {/* Project Settings Modal */}
       <ProjectSettingsModal
         isOpen={isSettingsModalOpen}
         onClose={() => setIsSettingsModalOpen(false)}
