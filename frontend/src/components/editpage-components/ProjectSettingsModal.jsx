@@ -1,5 +1,3 @@
-/* eslint-disable no-undef */
-/* eslint-disable react/prop-types */
 // frontend/src/components/editpage-components/ProjectSettingsModal.jsx
 import { useState, useEffect } from 'react';
 import { X } from 'lucide-react';
