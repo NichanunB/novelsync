@@ -216,9 +216,6 @@ function Profile() {
       {/* User Info */}
       <div className="user-info">
         <p className="user-email">{user?.email}</p>
-        <p className="member-since">
-          Member since: {user?.created_at ? new Date(user.created_at).toLocaleDateString() : 'Unknown'}
-        </p>
       </div>
 
       {/* Status Messages */}
